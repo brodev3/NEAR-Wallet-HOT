@@ -6,12 +6,14 @@ const log = require("../utils/logger");
 const axiosRetry = require('axios-retry').default;
 
 class Account {
-    constructor(username, session, api_id, api_hash, proxy) {
+    constructor(username, session, api_id, api_hash, proxy, hotToken, privateKey) {
         this.username = username;
         this.api_id = api_id;
         this.api_hash = api_hash;
         this.session = session;
         this.proxy = proxy;
+        this.hotToken = hotToken;
+        this.privateKey = privateKey;
     };
 
     async connect(){
@@ -47,7 +49,9 @@ let add_NewAccount = function (accountData){
             api_id: accountData.api_id,
             api_hash: accountData.api_hash,
             session: accountData.session,
-            proxy: accountData.proxy
+            proxy: accountData.proxy,
+            hotToken: accountData.hotToken,
+            privateKey: accountData.privateKey
         }
         utils.write_AccountsData(accountsData);
         log.info(`${accountData.username} added`);
@@ -59,11 +63,9 @@ let start_Accounts = async function (){
     let result = {};
     for (let account of listAccounts){
         let accountData = accountsData[account];
-        result[account] = new Account(account, accountData.session, accountData.api_id, accountData.api_hash, accountData.proxy);
+        result[account] = new Account(account, accountData.session, accountData.api_id, accountData.api_hash, accountData.proxy, accountData.hotToken, accountData.privateKey);
         await result[account].connect();
         log.info(`${account} connected`);
-        const me = await result[account].client.getMe();
-        await telegram.get_TgWebData(result[account].client)
     };
     return result;
 };

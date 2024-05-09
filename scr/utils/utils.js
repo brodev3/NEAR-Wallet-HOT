@@ -27,7 +27,7 @@ const userAgents = [
 
 let get_AccountsData = function () {
   try {
-      const data = fs.readFileSync(path.resolve(__dirname, '..') + "/config.json", 'utf8');
+      const data = fs.readFileSync(path.resolve(path.resolve(__dirname, '..'), '..') + "/config.json", 'utf8');
       const jsonData = JSON.parse(data);
       return jsonData;
       } catch (error) {
@@ -38,7 +38,7 @@ let get_AccountsData = function () {
 
 let write_AccountsData = function (data) {
     try {
-      fs.writeFileSync(path.resolve(__dirname, '..') + "/config.json", JSON.stringify(data, null, 2), 'utf8');
+      fs.writeFileSync(path.resolve(path.resolve(__dirname, '..'), '..') + "/config.json", JSON.stringify(data, null, 2), 'utf8');
       return true;
     } catch (error) {
         log.error(error);

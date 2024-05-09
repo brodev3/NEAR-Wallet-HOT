@@ -8,6 +8,8 @@ const manager = require("./accountManager");
     let apiId = await input.text("apiId ?");
     let apiHash = await input.text("apiHash?");
     let proxy = await input.text("proxy?");
+    let token = await input.text("Hot token?");
+    let privateKey = await input.text("privateKey?");
     let stringSession = new StringSession("");
     let options = { };
     if (proxy != ""){
@@ -47,7 +49,9 @@ const manager = require("./accountManager");
         api_id: Number(apiId),
         api_hash: apiHash,
         session: client.session.save(),
-        username: me.username
+        username: me.username,
+        hotToken: token,
+        privateKey: privateKey,
     };
     if (proxy != "")
         accData["proxy"] = {
