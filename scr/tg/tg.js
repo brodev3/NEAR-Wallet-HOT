@@ -3,7 +3,6 @@ const { StringSession } = require("telegram/sessions");
 const { Api } = require("telegram/tl");
 const log = require("../utils/logger");
 
-
 let get_Client = async (stringSession, apiId, apiHash, proxy) => {
     stringSession = new StringSession(stringSession);
     let options = {};
@@ -41,9 +40,8 @@ let get_TgWebData = async (client) => {
         log.error('Error: ' + error);
         return null;
     } 
-    return decodeURIComponent(authUrl.split('tgWebAppData=')[1].split('&tgWebAppVersion')[0]);
-}
+    return decodeURIComponent(authUrl.split('%26user')[1].split('&tgWebAppVersion')[0]);
+};
 
 module.exports.get_Client = get_Client;
 module.exports.get_TgWebData = get_TgWebData;
-
