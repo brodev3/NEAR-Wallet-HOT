@@ -1,11 +1,10 @@
 {
   "dependencies": {
-    "atob": "^2.1.2",
     "axios": "^1.6.8",
     "axios-retry": "^4.1.0",
+    "input": "^1.0.1",
     "near-api-js": "^4.0.1",
     "socks-proxy-agent": "^8.0.3",
-    "telegram": "^2.20.15",
-    "uuid": "^9.0.1"
+    "telegram": "^2.20.15"
   }
 }
