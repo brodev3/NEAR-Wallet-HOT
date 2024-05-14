@@ -1,17 +1,3 @@
 {
-    "username": {
-        "api_id": 41241,
-        "api_hash": "......",
-        "session": "......",
-        "proxy": {
-          "ip": "1.1.1.1",
-          "port": 111111,
-          "username": "...",
-          "password": "...",
-          "socksType": 5,
-          "timeout": 2
-        },
-        "hotToken": "...",
-        "privateKey": "..."
-      }
+
 }
