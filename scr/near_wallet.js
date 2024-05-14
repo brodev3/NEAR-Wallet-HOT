@@ -13,6 +13,7 @@ async function auth(Account){
     }
     catch (err){
         log.error(`Account: ${Account.username} ${err}`);
+        console.log(err)
     };
 };
 
@@ -24,6 +25,7 @@ async function get_NextClaim(Account){
     }
     catch (err){
         log.error(`Account: ${Account.username} ${err}`);
+        console.log(err)
     };
 };
 
@@ -50,6 +52,7 @@ async function claim(Account){
     }
     catch (err){
         log.error(`Account: ${Account.username} ${err}`);
+        console.log(err)
     };
 };
 
