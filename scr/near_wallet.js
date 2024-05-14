@@ -40,7 +40,7 @@ async function claim(Account){
         let respClaim = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim", game_status);
         let respSignature = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/signature", game_status);
         await near.claim(Account.near_account_id, Account.keyPair, respSignature.data)
-        let nextClaimMS = (Math.floor(Math.random() * (136 - 121 + 1)) + 121) * 60 * 1000;
+        let nextClaimMS = (Math.floor(Math.random() * (123 - 117 + 1)) + 117) * 60 * 1000;
         let hot = await near.get_HotBalance(Account.near_account_id, Account.keyPair) / 1000000;
         setTimeout(claim, nextClaimMS, Account);
         log.info(`Account ${Account.username} | Claimed HOT. Balance: ${hot}`);
@@ -61,6 +61,7 @@ async function farming(Account){
             await claim(Account);
         else 
             setTimeout(claim, nextClaim - currentTimestamp, Account);
+            log.info(`Account ${Account.username} | Waiting claim...`);
         return;
     }
     catch (err){

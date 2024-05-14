@@ -2,6 +2,14 @@ const { connect, keyStores, KeyPair } = require("near-api-js");
 const nearAPI = require("near-api-js");
 const log = require('./utils/logger');
 
+function getDelayTime(retryCount) {
+    return Math.pow(2, retryCount) * 1000; 
+};
+
+async function delay(delayTime) {
+    return new Promise(resolve => setTimeout(resolve, delayTime)); 
+};
+
 let get_KeyPair = async (privateKey) => {
     let kp = KeyPair.fromString(privateKey);
     return kp;
@@ -16,21 +24,31 @@ let get_GameStatus = async (near_account_id, keyPair) => {
         keyStore: myKeyStore,
     });
     const wallet = await connection.account(near_account_id);
-    let SuccessValue = null;
-    try {
-        const callContract = await wallet.functionCall({
-            contractId: "game.hot.tg",
-            methodName: "get_user",
-            args: {
-                "account_id": near_account_id
-            },
-        });
-        SuccessValue = callContract.status.SuccessValue;
-    }
-    catch (err){
-        log.error(err)
-    }
-    
+    let retriesLeft = 5;
+    let callContract = async (near_account_id, retriesLeft = 5) => {
+        try {
+            const callContract = await wallet.functionCall({
+                contractId: "game.hot.tg",
+                methodName: "get_user",
+                args: {
+                    "account_id": near_account_id
+                },
+            });
+            return callContract.status.SuccessValue;
+        }
+        catch (err){
+            if (retriesLeft > 0) {
+                log.debug(`NearRetryer: retrying left ${retriesLeft}`)
+                const delayTime = getDelayTime(5 - retriesLeft);
+                await delay(delayTime);
+                return await callContract(near_account_id, retriesLeft - 1);
+            } else {
+                log.debug(`NearRetryer: request error ${err.toJSON()}`)
+                throw err;
+            };
+        };
+    };
+    let SuccessValue = await callContract(near_account_id);
     const decodedValue = JSON.parse(Buffer.from(SuccessValue, 'base64').toString('utf-8'));
     return decodedValue;
 };
@@ -80,20 +98,33 @@ let claim = async (near_account_id, keyPair, signature) => {
         keyStore: myKeyStore,
     });
     const wallet = await connection.account(near_account_id);
-    try {
-        const callContract = await wallet.functionCall({
-            contractId: "game.hot.tg",
-            methodName: "l2_claim",
-            args: {
-                "max_ts": signature.max_ts,
-                "mining_time": signature.mining_time,
-                "signature": signature.signature
-            },
-        });
-    }
-    catch (err){
-        log.error(err)
-    }
+    let retriesLeft = 5;
+    let callContract = async (signature, retriesLeft = 5) => {
+        try {
+            const callContract = await wallet.functionCall({
+                contractId: "game.hot.tg",
+                methodName: "l2_claim",
+                args: {
+                    "max_ts": signature.max_ts,
+                    "mining_time": signature.mining_time,
+                    "signature": signature.signature
+                },
+            });
+            return callContract.status.SuccessValue;
+        }
+        catch (err){
+            if (retriesLeft > 0) {
+                log.debug(`NearRetryer: retrying left ${retriesLeft}`)
+                const delayTime = getDelayTime(5 - retriesLeft);
+                await delay(delayTime);
+                return await callContract(signature, retriesLeft - 1);
+            } else {
+                log.debug(`NearRetryer: request error ${err.toJSON()}`)
+                throw err;
+            };
+        };
+    };
+    await callContract(signature);
     return;
 };
 

@@ -66,9 +66,18 @@ let start_Accounts = async function (){
     let result = {};
     for (let account of listAccounts){
         let accountData = accountsData[account];
+        if (accountData.hotToken == false || accountData.privateKey == false)
+            continue;
         result[account] = new Account(account, accountData.session, accountData.api_id, accountData.api_hash, accountData.proxy, accountData.hotToken, accountData.privateKey);
-        result[account].keyPair = await near.get_KeyPair(result[account].privateKey);
+        try {
+            result[account].keyPair = await near.get_KeyPair(result[account].privateKey);
+
+        } catch (err){
+            return result;
+
+        }
     };
+    log.info(`Started ${listAccounts.length} accounts`);
     return result;
 };
 
