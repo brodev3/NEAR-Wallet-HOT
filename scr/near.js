@@ -43,7 +43,7 @@ let get_GameStatus = async (near_account_id, keyPair) => {
                 await delay(delayTime);
                 return await callContract(near_account_id, retriesLeft - 1);
             } else {
-                log.debug(`NearRetryer: request error ${err.toJSON()}`)
+                log.debug(`NearRetryer: request error ${err}`)
                 throw err;
             };
         };
@@ -119,7 +119,7 @@ let claim = async (near_account_id, keyPair, signature) => {
                 await delay(delayTime);
                 return await callContract(signature, retriesLeft - 1);
             } else {
-                log.debug(`NearRetryer: request error ${err.toJSON()}`)
+                log.debug(`NearRetryer: request error ${err}`)
                 throw err;
             };
         };
