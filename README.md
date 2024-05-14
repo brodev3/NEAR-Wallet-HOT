@@ -35,6 +35,7 @@ Proxy **ONLY SOCKS5**  supported
 7. **If you have used blumer** , you can add data to the config.json from the [blumer](https://github.com/brodev3/blumer) application:
    
    To do this, you need to:
+   - Copy config.json from blumer/scr/config.json to NEAR-Wallet-HOT/config.json
    - Get auth token
       ```
       1. Log in to your account via the telegram web version https://web.telegram.org/
@@ -53,7 +54,7 @@ Proxy **ONLY SOCKS5**  supported
      
    > If, when adding data to the config, you do not want to use an account for farming, then send an empty line, the program will skip this account
 
-8. Use ```import.js``` to import accounts:
+9. Use ```import.js``` to import accounts:
     ```
     node scr/tg/import
     ```
