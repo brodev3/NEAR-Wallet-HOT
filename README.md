@@ -49,6 +49,8 @@ Proxy **ONLY SOCKS5**  supported
      node scr/tg/add
      ```
      
+   > If, when adding data to the config, you do not want to use an account for farming, then send an empty line, the program will skip this account
+
 8. Use ```import.js``` to import accounts:
     ```
     node scr/tg/import
