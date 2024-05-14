@@ -13,6 +13,8 @@
 
 Automatically claim HOT rewards, the transaction is sent from the frontend !
 
+Leave 0.1-0.3 near on the gas
+
 Proxy **ONLY SOCKS5**  supported
 
 ## Setup
