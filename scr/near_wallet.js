@@ -12,7 +12,7 @@ async function auth(Account){
         Account.axios.defaults.headers.common['Authorization'] = Account.hotToken;
     }
     catch (err){
-        log.error(`Account: ${Account.username} ` + err);
+        log.error(`Account: ${Account.username} ${err}`);
     };
 };
 
@@ -23,7 +23,7 @@ async function get_NextClaim(Account){
         return nextClaim;
     }
     catch (err){
-        log.error(`Account: ${Account.username} ` + err);
+        log.error(`Account: ${Account.username} ${err}`);
     };
 };
 
@@ -49,7 +49,7 @@ async function claim(Account){
         return true;
     }
     catch (err){
-        log.error(`Account: ${Account.username} ` + err);
+        log.error(`Account: ${Account.username} ${err}`);
     };
 };
 
