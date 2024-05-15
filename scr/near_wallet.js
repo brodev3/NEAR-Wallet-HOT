@@ -38,7 +38,7 @@ async function claim(Account){
         let game_status = {
             game_state : game_state
         };
-        let respStatus = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/status", game_status);
+        // let respStatus = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/status", game_status);
         let respClaim = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim", game_status);
         let respSignature = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/signature", game_status);
         await near.claim(Account.near_account_id, Account.keyPair, respSignature.data)
