@@ -30,8 +30,8 @@ let get_TgWebData = async (client) => {
         const webview = await client.invoke(new Api.messages.RequestWebView({
             peer: 'herewalletbot',
             bot: 'herewalletbot',
-            platform: 'android',
-            fromBotMenu: false,
+            platform: 'web',
+            fromBotMenu: true,
             url: 'https://api0.herewallet.app/api/v1/user/'
         }));
         authUrl = webview.url;

@@ -2,14 +2,16 @@ const log = require("./utils/logger");
 const telegram = require("./tg/tg");
 const axiosRetry = require("./utils/axiosRetryer");
 const near = require("./near");
-
+const notion = require("./utils/notion");
+const { getErrorTypeFromErrorMessage } = require("near-api-js/lib/utils/rpc_errors");
 
 async function auth(Account){
     try {
-        let TgWebData = await telegram.get_TgWebData(Account.client);
-        Account.TgWebData = `%26user${TgWebData}`;
-        Account.axios.defaults.headers.common['telegram-data'] = `%26user${TgWebData}`;
+        Account.axios.defaults.headers.common['telegram-data'] = ``;
         Account.axios.defaults.headers.common['Authorization'] = Account.hotToken;
+        let respStatus = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/web_auth", null);
+        Account.axios.defaults.headers.common['telegram-data'] = respStatus.data.params;
+        Account.TgWebData = respStatus.data.params;
     }
     catch (err){
         log.error(`Account: ${Account.username} ${err}`);
@@ -38,7 +40,8 @@ async function claim(Account){
         let game_status = {
             game_state : game_state
         };
-        // let respStatus = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/status", game_status);
+        game_status = JSON.stringify(game_status);
+        let respStatus = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/status", game_status);
         let respClaim = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim", game_status);
         let respSignature = await axiosRetry.post(Account.axios, "https://api0.herewallet.app/api/v1/user/hot/claim/signature", game_status);
         await near.claim(Account.near_account_id, Account.keyPair, respSignature.data)
@@ -46,6 +49,9 @@ async function claim(Account){
         let hot = await near.get_HotBalance(Account.near_account_id, Account.keyPair) / 1000000;
         setTimeout(claim, nextClaimMS, Account);
         log.info(`Account ${Account.username} | Claimed HOT. Balance: ${hot}`);
+        await notion.findAndUpdatePage("Brothers", Account.username + ".tg", "HOT", hot);
+        let nearBalance = await near.get_NearBalance(Account.near_account_id, Account.keyPair);
+        await notion.findAndUpdatePage("Brothers", Account.username + ".tg", "NEAR", +nearBalance.available);
         await Account.client.disconnect();
         await Account.client.destroy();
         return true;

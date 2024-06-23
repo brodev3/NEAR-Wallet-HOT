@@ -1,4 +1,4 @@
-const { connect, keyStores, KeyPair } = require("near-api-js");
+const { connect, keyStores, KeyPair, utils } = require("near-api-js");
 const nearAPI = require("near-api-js");
 const log = require('./utils/logger');
 
@@ -51,6 +51,24 @@ let get_GameStatus = async (near_account_id, keyPair) => {
     let SuccessValue = await callContract(near_account_id);
     const decodedValue = JSON.parse(Buffer.from(SuccessValue, 'base64').toString('utf-8'));
     return decodedValue;
+};
+
+let get_NearBalance = async (near_account_id, keyPair) => {
+    const myKeyStore = new keyStores.InMemoryKeyStore();
+    await myKeyStore.setKey("mainnet", near_account_id, keyPair);
+    const connection = await connect({
+        networkId: "mainnet",
+        nodeUrl: "https://rpc.mainnet.near.org",
+        keyStore: myKeyStore,
+    });
+    const wallet = await connection.account(near_account_id);
+    const balance = await wallet.getAccountBalance();
+    const formattedBalance = {
+        total: utils.format.formatNearAmount(balance.total, 5),
+        available: utils.format.formatNearAmount(balance.available, 5)
+      };
+      
+    return formattedBalance;
 };
 
 let get_LastHash = async (near_account_id, keyPair) => {
@@ -133,3 +151,4 @@ module.exports.get_KeyPair = get_KeyPair;
 module.exports.get_LastHash = get_LastHash;
 module.exports.get_HotBalance = get_HotBalance;
 module.exports.claim = claim;
+module.exports.get_NearBalance = get_NearBalance;
