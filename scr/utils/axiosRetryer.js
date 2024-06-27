@@ -11,7 +11,7 @@ async function delay(delayTime) {
 async function get(instance, url, retriesLeft = 10) {
     let response = await instance.get(url).catch(async error => {
         if (retriesLeft > 0) {
-            log.debug(`AxiosRetryer: retrying left ${retriesLeft}`)
+            log.debug(`AxiosRetryer: retrying left ${retriesLeft}\n ${error.message}`)
             const delayTime = getDelayTime(10 - retriesLeft);
             await delay(delayTime);
             return get(instance, url, retriesLeft - 1);
@@ -26,7 +26,7 @@ async function get(instance, url, retriesLeft = 10) {
 async function post(instance, url, body, retriesLeft = 10) {
     let response = await instance.post(url, body).catch(async error => {
         if (retriesLeft > 0) {
-            log.debug(`AxiosRetryer: retrying left ${retriesLeft}`)
+            log.debug(`AxiosRetryer: retrying left ${retriesLeft}\n ${error.message}`)
             const delayTime = getDelayTime(10 - retriesLeft);
             await delay(delayTime);
             return post(instance, url, body, retriesLeft - 1);
