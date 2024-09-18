@@ -60,7 +60,7 @@ const manager = require("./accountManager");
             username: options.proxy.username, 
             password: options.proxy.password, 
             socksType: 5, 
-            timeout: 2, 
+            timeout: 2000, 
         };
     else 
         accData["proxy"] = false;
